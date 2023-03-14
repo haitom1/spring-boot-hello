@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('pre-build') {
+    stage('build') {
       agent {
         node {
           label 'nonprod'
