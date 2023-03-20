@@ -1,28 +1,28 @@
 pipeline {
-  agent {
-    node {
-      label 'nonprod'
+    agent any
+    tools {
+        maven 'Maven 3.3.9'
+        jdk 'jdk8'
     }
-
-  }
-  stages {
-    stage('build') {
-      agent {
-        node {
-          label 'nonprod'
+    stages {
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
         }
 
-      }
-      steps {
-        sh 'echo "Hello World!!!"'
-      }
+        stage ('Build') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true install' 
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/**/*.xml' 
+                }
+            }
+        }
     }
-
-    stage('') {
-      steps {
-        build 'build'
-      }
-    }
-
-  }
 }
